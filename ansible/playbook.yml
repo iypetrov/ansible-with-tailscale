@@ -1,0 +1,12 @@
+- name: Install dependencies
+  hosts: your-org
+  become: yes
+  roles:
+    - base
+    - geerlingguy.docker
+
+- name: Setup your application
+  hosts: your-vm
+  become: yes
+  roles:
+    - api

@@ -1,0 +1,8 @@
+- name: Start traefik:latest container
+  community.docker.docker_container:
+    name: traefik_latest
+    image: traefik:latest
+    state: started
+    ports:
+      - "8081:80"
+    restart_policy: no

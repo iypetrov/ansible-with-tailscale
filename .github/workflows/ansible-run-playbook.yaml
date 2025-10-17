@@ -1,0 +1,42 @@
+---
+name: Ansible Run Playbook
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ansible/**'
+
+jobs:
+  run-playbook:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Install Ansible roles
+        run: ansible-galaxy install -r ansible/requirements.yml
+
+      - name: Run Ansible playbook
+        uses: dawidd6/action-ansible-playbook@v5
+        with:
+          playbook: ansible/playbook.yml
+          inventory: |
+            [workers]
+            a1 ansible_host=aws-worker-1
+            a2 ansible_host=aws-worker-2
+          options: |
+            --user ubuntu
+            --verbose

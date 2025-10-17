@@ -1,0 +1,44 @@
+---
+name: Ansible Run Playbook
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ansible/**
+
+jobs:
+  run-playbook:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+
+      - name: Install Ansible roles
+        run: ansible-galaxy install -r ansible/requirements.yml
+
+      - name: Run Ansible playbook
+        uses: dawidd6/action-ansible-playbook@v4
+        with:
+          playbook: ansible/playbook.yml
+          inventory: |
+            [your-org]
+            your-vm ansible_host=foo
+          options: |
+            --user ubuntu
+            --verbose
+
+      - name: Tailscale logout (force cleanup)
+        if: always()
+        run: sudo tailscale logout || true

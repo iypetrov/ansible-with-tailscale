@@ -1,0 +1,8 @@
+- name: Install common utilities
+  apt:
+    name:
+      - tmux
+      - vim
+      - jq
+      - htop
+    state: present

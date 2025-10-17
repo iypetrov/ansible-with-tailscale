@@ -1,0 +1,18 @@
+- name: Install dependencies
+  hosts: workers
+  become: yes
+  roles:
+    - base
+    - geerlingguy.docker
+
+- name: Install nginx on AWS Worker 1
+  hosts: a1
+  become: yes
+  roles:
+    - nginx
+
+- name: Install traefik on AWS Worker 2
+  hosts: a2
+  become: yes
+  roles:
+    - traefik

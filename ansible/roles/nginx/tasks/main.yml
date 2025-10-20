@@ -1,0 +1,5 @@
+- name: Nginx Alpine
+  import_tasks: nginx_alpine.yml
+
+- name: Nginx Latest
+  import_tasks: nginx_latest.yml

@@ -1,0 +1,5 @@
+- name: Traefik Alpine
+  import_tasks: traefik_alpine.yml
+
+- name: Traefik Latest
+  import_tasks: traefik_latest.yml

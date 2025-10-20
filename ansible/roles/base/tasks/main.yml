@@ -4,5 +4,4 @@
       - tmux
       - vim
       - jq
-      - htop
     state: present
